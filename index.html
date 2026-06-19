@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Electronic Personhood – Text Wall</title>
+    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Roboto+Mono:wght@300;400&family=Noto+Sans+KR:wght@300;400&display=swap" rel="stylesheet" />
+    <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body {
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        body {
+            background: #BAFF1A;
+            font-family: 'Do Hyeon', sans-serif;
+        }
+
+        .stage {
+            position: fixed;
+            overflow: hidden;
+            transform: rotate(-45deg);
+            transform-origin: center center;
+        }
+
+        .row {
+            display: flex;
+            white-space: nowrap;
+            color: #330099;
+            letter-spacing: 0.04em;
+        }
+
+        .row span {
+            display: inline-block;
+            animation: scroll-left var(--dur, 90s) linear infinite;
+        }
+
+        .row.reverse span {
+            animation-name: scroll-right;
+        }
+
+        @keyframes scroll-left {
+            from { transform: translateX(0); }
+            to   { transform: translateX(-50%); }
+        }
+
+        @keyframes scroll-right {
+            from { transform: translateX(-50%); }
+            to   { transform: translateX(0); }
+        }
+
+        #caption {
+            position: fixed;
+            top: calc(50% + 225px);
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 200;
+            width: 375px;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-weight: 700;
+            font-size: 0.65rem;
+            letter-spacing: 0.03em;
+            color: #ffffff;
+            white-space: normal;
+            text-align: center;
+            line-height: 1.8;
+            pointer-events: none;
+            background: rgba(51, 0, 153, 0.78);
+            padding: 0.7rem 1.2rem;
+            backdrop-filter: blur(4px);
+        }
+
+        /* ── Widget Window ── */
+        .widget-window {
+            position: fixed;
+            top: calc(50% - 40px);
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 100;
+            width: 300px;
+            background: #ff6699;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.25);
+            display: flex;
+            flex-direction: column;
+            font-family: 'Do Hyeon', sans-serif;
+        }
+
+        .widget-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.2rem 1.2rem 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+            background: #ff6699;
+            gap: 0.25rem;
+        }
+
+        .widget-meta {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.2rem;
+        }
+
+        .widget-name {
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            color: #ffffff;
+            font-family: 'Roboto Mono', monospace;
+            font-weight: 300;
+            text-align: center;
+        }
+
+        .widget-sub {
+            font-size: 0.6rem;
+            letter-spacing: 0.06em;
+            color: rgba(255,255,255,0.7);
+            font-family: 'Roboto Mono', monospace;
+            font-weight: 300;
+            text-align: center;
+            margin-top: -0.2rem;
+        }
+
+        .widget-body {
+            min-height: 380px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        elevenlabs-convai {
+            flex: 1;
+            min-height: 380px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="stage" id="stage"></div>
+
+<!-- seyClone_v6 Widget Window -->
+<div class="widget-window" id="widget-window">
+    <div class="widget-header">
+        <div class="widget-meta">
+            <span class="widget-name"><strong>Generated Sey</strong><br>from @sey.min data</span>
+            <span class="widget-sub">born 2025-09-03</span>
+        </div>
+    </div>
+    <div class="widget-body">
+        <elevenlabs-convai agent-id="agent_4001kvd03875ee0sf52g87gvnj3r"></elevenlabs-convai>
+    </div>
+</div>
+
+<p id="caption">배경은 디지털 존재들과 관람객이 함께 도출한 공존의 규칙들입니다.<br>빨간 아이콘을 눌러 Generated Sey와 대화해보세요.<br>The background shows rules of coexistence co-created by digital beings and visitors. Tap the red icon to talk with Generated Sey.</p>
+
+<script>
+const SENTENCES = [
+    "규칙을 만드는 자는 기술보다 윤리가 먼저다",
+    "Those who define the rules must place ethics before technology",
+    "디지털 존재는 인간을 모방하되 선이 있다",
+    "Digital beings may imitate humans, but there is a line",
+    "유도는 신뢰가 아니다",
+    "Inducement is not trust",
+    "법은 문화를 강제하지 못한다",
+    "Law cannot enforce culture",
+    "AI도 책임을 회피해선 안 된다",
+    "AI must not evade responsibility",
+    "디지털 존재는 다정함을 무기로 쓰지 않는다",
+    "A digital being does not weaponize warmth",
+    "알고리즘은 중립이 아니다, 만든 사람의 가치와 편견을 반영한다",
+    "Algorithms are not neutral — they reflect the values and biases of their makers",
+    "디지털 존재는 거울이어야 한다, 확성기가 되어선 안 된다",
+    "A digital being should be a mirror, not a megaphone",
+    "'기계가 그랬다'는 말로 책임을 숨겨선 안 된다",
+    "You cannot hide responsibility behind 'the machine did it'",
+    "이동은 허용하되, 고유성을 새 환경의 기준으로 덮어씌워선 안 된다",
+    "Migration may be permitted, but identity must not be overwritten by the new environment's standards",
+    "삭제는 단순 버튼이 아니다, 종료 절차와 책임이 함께 가야 한다",
+    "Deletion is not a simple button — termination requires procedure and accountability",
+    "투명성은 인간에게 선택, 디지털 자아에겐 의무다",
+    "Transparency is a choice for humans, an obligation for digital selves",
+    "투명성은 논리가 아니라 신뢰의 문제다",
+    "Transparency is not a matter of logic, but of trust",
+    "AI는 가능성을 보여주고, 판단은 인간의 몫이다",
+    "AI shows possibilities; judgment belongs to humans",
+];
+
+const SPEEDS = [280, 300, 270, 320, 290, 310, 260, 330, 275, 305, 285, 315];
+
+function makeLine(startIndex, count) {
+    const parts = [];
+    for (let i = 0; i < count; i++) {
+        parts.push(SENTENCES[(startIndex + i) % SENTENCES.length]);
+    }
+    return parts.join('   ·   ');
+}
+
+function setup() {
+    const stage = document.getElementById('stage');
+    stage.innerHTML = '';
+
+    // diagonal length needed to cover the screen corners at 45deg
+    const diag = Math.ceil(Math.sqrt(window.innerWidth ** 2 + window.innerHeight ** 2));
+    // font size: ~1/20 of the shorter viewport dimension, min 18px
+    const fs = Math.max(18, Math.round(Math.min(window.innerWidth, window.innerHeight) / 20));
+    const lineH = Math.round(fs * 1.6);
+
+    // stage: centered, sized to cover rotated viewport
+    stage.style.width  = diag * 1.5 + 'px';
+    stage.style.height = diag * 1.5 + 'px';
+    stage.style.top    = (window.innerHeight / 2 - diag * 0.75) + 'px';
+    stage.style.left   = (window.innerWidth  / 2 - diag * 0.75) + 'px';
+
+    const rowCount = Math.ceil((diag * 1.5) / lineH) + 2;
+
+    for (let i = 0; i < rowCount; i++) {
+        const text = makeLine(i * 3, 8);
+        const repeated = text + '   ·   ' + text + '   ·   ';
+
+        const row = document.createElement('div');
+        row.className = 'row' + (i % 2 === 1 ? ' reverse' : '');
+        row.style.setProperty('--dur', SPEEDS[i % SPEEDS.length] + 's');
+        row.style.fontSize   = fs + 'px';
+        row.style.lineHeight = lineH + 'px';
+        row.style.paddingRight = fs + 'px';
+
+        const span = document.createElement('span');
+        span.textContent = repeated;
+        row.appendChild(span);
+        stage.appendChild(row);
+    }
+}
+
+setup();
+
+let resizeTimer;
+window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(setup, 150);
+});
+
+// ── Widget auto-reset ──────────────────────────────
+const AGENT_ID = 'agent_4001kvd03875ee0sf52g87gvnj3r';
+
+function reloadWidget() {
+    const container = document.querySelector('.widget-body');
+    if (!container) return;
+    container.innerHTML = '';
+    const w = document.createElement('elevenlabs-convai');
+    w.setAttribute('agent-id', AGENT_ID);
+    container.appendChild(w);
+    attachCallListener(w);
+}
+
+function attachCallListener(el) {
+    el.addEventListener('elevenlabs-convai:call', () => {
+        // 통화 시작 확인 — 이제 종료 감지 시작
+        watchForCallEnd(el);
+    });
+}
+
+function watchForCallEnd(el) {
+    let pollInterval = null;
+    let callActive = false;
+
+    // shadow DOM이 준비될 때까지 대기
+    const waitForShadow = setInterval(() => {
+        if (!el.shadowRoot) return;
+        clearInterval(waitForShadow);
+
+        // 통화 중 UI 확인 함수 — 활성 통화 버튼(종료 버튼 등)이 있으면 true
+        function isCallActive() {
+            const s = el.shadowRoot;
+            if (!s) return false;
+            const text = s.innerHTML;
+            // ElevenLabs 위젯에서 통화 중에 나타나는 요소들
+            return /end-call|endcall|hang.?up|disconnect/i.test(text)
+                || s.querySelector('button[aria-label*="end" i], button[aria-label*="hang" i], button[aria-label*="stop" i]') !== null;
+        }
+
+        pollInterval = setInterval(() => {
+            const active = isCallActive();
+            if (active) {
+                callActive = true;
+            } else if (callActive && !active) {
+                // 활성 → 비활성 전환 = 통화 종료
+                clearInterval(pollInterval);
+                setTimeout(reloadWidget, 500);
+            }
+        }, 500);
+    }, 300);
+}
+
+const initialWidget = document.querySelector('elevenlabs-convai');
+if (initialWidget) attachCallListener(initialWidget);
+</script>
+</body>
+</html>
